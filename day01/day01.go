@@ -2,54 +2,75 @@ package day01
 
 import (
 	"log"
+	"regexp"
 	"strconv"
-	"unicode"
+	"strings"
 
 	"github.com/selece/aoc2023-golang/util"
 )
 
-func RunDay01(short bool) {
-	path := ""
-	if short {
-		path = "day01/test.txt"
-	} else {
-		path = "day01/input.txt"
-	}
+func RunDay01(path string) {
 	reader := util.New(path)
+	log.Printf("sum: %d\n", tallyNumbersFromStringArray(reader.Contents))
+}
 
-	tally := make([]int, 0)
-	for _, line := range reader.Contents {
-		extracted := ""
-		log.Printf("line: %s\n", line)
-
-		for _, rune := range line {
-			if unicode.IsDigit(rune) {
-				extracted += string(rune)
-			}
-		}
-
-		log.Printf("extracted: %s\n", extracted)
-
-		crunched := ""
-		crunched += string(extracted[0])
-		crunched += string(extracted[len(extracted)-1])
-
-		log.Printf("crunched: %s\n", crunched)
-
-		converted, err := strconv.Atoi(crunched)
-		if err != nil {
-			log.Fatal("Failed to convert to integer: " + crunched)
-			log.Fatal(err)
-		}
-
-		log.Printf("converted: %d\n", converted)
-		tally = append(tally, converted)
+func tallyNumbersFromStringArray(input []string) int {
+	tally := 0
+	for _, line := range input {
+		tally += processNumbersFromString(line)
 	}
 
-	sum := 0
-	for _, v := range tally {
-		sum += v
+	return tally
+}
+
+func processNumbersFromString(input string) int {
+	return crunchNumericStringArrayToInt(findNumbers(replaceStringsWithNumbers(input)))
+}
+
+var replacer = strings.NewReplacer(
+	"one", "on1e",
+	"two", "tw2o",
+	"three", "thre3e",
+	"four", "fou4r",
+	"five", "fiv5e",
+	"six", "si6x",
+	"seven", "seve7n",
+	"eight", "eigh8t",
+	"nine", "nin9e",
+)
+
+func replaceStringsWithNumbers(input string) string {
+	result := input
+	for {
+		prev := result
+		result = replacer.Replace(result)
+
+		if prev == result {
+			break
+		}
 	}
 
-	println(sum)
+	return result
+}
+
+func findNumbers(input string) []string {
+	re, err := regexp.Compile("[1-9]")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return re.FindAllString(input, -1)
+}
+
+func crunchNumericStringArrayToInt(input []string) int {
+	crunched := ""
+	crunched += string(input[0])
+	crunched += string(input[len(input)-1])
+
+	converted, err := strconv.Atoi(crunched)
+	if err != nil {
+		log.Fatalf("failed to convert to string: %s\n", crunched)
+	}
+
+	return converted
 }

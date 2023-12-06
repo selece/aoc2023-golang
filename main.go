@@ -9,17 +9,11 @@ import (
 
 func main() {
 	day := os.Args[1]
-	short := false
-
-	if os.Args[2] == "true" {
-		short = true
-	} else {
-		short = false
-	}
+	path := os.Args[2]
 
 	switch day {
 	case "1":
-		day01.RunDay01(short)
+		day01.RunDay01(path)
 
 	default:
 		log.Fatal("invalid day choice: " + day)
