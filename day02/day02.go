@@ -72,15 +72,19 @@ func RunDay02(path string) {
 	reqBlue := 14
 
 	tally := 0
+	powerTally := 0
 
 	for _, line := range reader.Contents {
 		game := extractGameFromLine(line)
 		if game.PassesRequirements(reqRed, reqGreen, reqBlue) {
 			tally += game.id
 		}
+
+		powerTally += game.maxBlue * game.maxGreen * game.maxRed
 	}
 
-	log.Printf("sum: %d", tally)
+	log.Printf("sum: %d\n", tally)
+	log.Printf("powersum: %d\n", powerTally)
 }
 
 func extractGameId(input string) int {
