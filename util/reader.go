@@ -11,7 +11,7 @@ type FileReader struct {
 	Contents []string
 }
 
-func New(path string) FileReader {
+func NewFileReader(path string) FileReader {
 	newReader := FileReader{path, nil}
 
 	file, err := os.Open(path)

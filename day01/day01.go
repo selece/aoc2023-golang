@@ -10,7 +10,7 @@ import (
 )
 
 func RunDay01(path string) {
-	reader := util.New(path)
+	reader := util.NewFileReader(path)
 	log.Printf("sum: %d\n", tallyNumbersFromStringArray(reader.Contents))
 }
 
@@ -54,11 +54,7 @@ func replaceStringsWithNumbers(input string) string {
 }
 
 func findNumbers(input string) []string {
-	re, err := regexp.Compile("[1-9]")
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	re := regexp.MustCompile("[1-9]")
 	return re.FindAllString(input, -1)
 }
 
